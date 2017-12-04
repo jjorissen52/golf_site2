@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta_title %}Upcoming Events{% endblock %}
+{% block title %}
+{{ title_mod }} Events
+{% endblock %}
+{% block calendar %}
+<head>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>#}
+{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css" rel='stylesheet' />#}
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "assets/js/jquery.min.js" %}"></script>
+    <script src="{% static "js/moment.min.js" %}"></script>
+    <script src="{% static "js/fullcalendar.min.js" %}"></script>
+    <link href="{% static "js/fullcalendar.min.css" %}" rel='stylesheet' />
+    <link href="{% static "js/fullcalendar.print.min.css" %}" rel='stylesheet' media='print' />
+{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.print.css" rel='stylesheet' media='print' />#}
+</head>
+<section id="main">
+    <div class="inner">
+{% if events %}
+<p>
+  <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    List of {{ title_mod }} Events
+  </a>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    <table id="event-table" class="table" style="margin-bottom: 0;">
+        {% for event in events %}
+            {% if forloop.first %}
+            <thead>
+                <tr>
+                    {% for key, value in events.0.items %}
+                        {% if key != 'id' %}
+                            <th scope="col">{{ key.title }}</th>
+                        {% else %}
+                            <th></th>
+                        {% endif %}
+
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    {% for key, value in event.items  %}
+                        {% if forloop.first %}
+                        <th scope="row">{{ value }}</th>
+                        {% else %}
+                            {% if request.user.is_staff and key == 'id' %}
+                                <td><a href="{% url "admin:events_event_change" value %}" target="_blank">Edit Event</a></td>
+                            {% elif key != 'id' %}
+                                <td>{{ value }}</td>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% if request.user.is_staff %}
+        <a class="btn btn-success" href="{% url "admin:events_event_add" %}" style="float: right; margin-right: 50px;">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add Event
+        </a>
+        <br><br><br>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div id="event-info" class="alert alert-info">
+  <strong>Click or Hover over an event to see details.</strong>
+</div>
+<div id="calendar"></div>
+
+<div id='loading'>loading...</div>
+
+<div id='script-warning'>
+    endpoint <code>api/upcoming-events</code> could not be found. If the issue persists contact your system adminstrator.
+</div>
+
+<script>
+	$(document).ready(function() {
+
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,listWeek'
+			},
+			defaultDate: moment.now(),
+			editable: true,
+			navLinks: true, // can click day/week names to navigate views
+			eventLimit: true, // allow "more" link when too many events
+			events: {
+				url: '{% url api_url %}',
+				error: function() {
+					$('#script-warning').show();
+				},
+                success: function() {
+				    $('#event-info').html('<strong>Click or Hover over an event to see details.</strong>');
+				}
+			},
+            eventRender: function(event, element) {
+                element.attr('title', event.description);
+                if (! event.end){
+                    event.allDay = true;
+                }
+            },
+			loading: function(bool) {
+				$('#loading').toggle(bool);
+			},
+            eventClick: function(calEvent, jsEvent, view) {
+                alert('Event: ' + calEvent.description);
+                calEvent.description ? $('#event-info').text(calEvent.description) : $('#event-info').html('<strong>Click or Hover over an event to see details.</strong>');
+                {% if request.user.is_staff %}
+                    window.open('{% url "admin:events_event_changelist" %}', '_blank');
+                {% endif %}
+            }
+		});
+
+	});
+</script>
+<style>
+
+	#script-warning {
+		display: none;
+		background: #eee;
+		border-bottom: 1px solid #ddd;
+		padding: 0 10px;
+		line-height: 40px;
+		text-align: center;
+		font-weight: bold;
+		font-size: 12px;
+		color: red;
+	}
+
+	#loading {
+		display: none;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+	}
+
+</style>
+</div>
+</section>
+{% endblock calendar %}
