@@ -62,8 +62,9 @@
 /* Containers */
 
 	.container {
-		margin-left: auto;
-		margin-right: auto;
+		margin-left: 0em !important;
+		margin-right: 0em !important;
+		width: 100vw !important;
 		padding-left: 0em;
 		padding-right: 0em;
 	}
@@ -188,9 +189,6 @@
 			width: 22.5%;
 		}
 
-		.container {
-			width: 90% !important;
-		}
 
 	}
 
@@ -214,9 +212,6 @@
 			width: 22.5%;
 		}
 
-		.container {
-			width: 90% !important;
-		}
 
 	}
 

@@ -1,69 +1,45 @@
-import os
+import os, configparser, socket
 gettext = lambda s: s
 DATA_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x()c5%caqmu@+bhdppm*m*s$)r((@q%x-lxf1$ryk$jv@xs@xc'
-
+config = configparser.ConfigParser()
+config.read(os.path.join(BASE_DIR, 'secrets.conf'))
+SECRET_KEY = config.get('django', 'secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
-
-
-# Application definition
-
-
-
 ROOT_URLCONF = 'golf_site2.urls'
-
-
-
 WSGI_APPLICATION = 'golf_site2.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = 'en'
-
 TIME_ZONE = 'America/Chicago'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(DATA_DIR, 'golf_site2', 'media')
 # STATIC_ROOT = os.path.join(DATA_DIR, 'static')
-
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'golf_site2', 'static'),
     os.path.join(BASE_DIR, 'golf_site2', 'binary_assets'),
     os.path.join(BASE_DIR, 'events', 'static'),
     os.path.join(BASE_DIR, 'static'),
 )
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME = config.get('golf_site2', 'storage_bucket_name')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+# STATIC_URL = "https://%s/static/" % AWS_S3_CUSTOM_DOMAIN
+MEDIA_URL = "https://%s/media/" % AWS_S3_CUSTOM_DOMAIN
+MEDIAFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'short_term_reports.custom_storages.StaticStorage'
+
+
 SITE_ID = 1
-
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -91,7 +67,6 @@ TEMPLATES = [
     },
 ]
 
-
 MIDDLEWARE_CLASSES = (
     'cms.middleware.utils.ApphookReloadMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -107,7 +82,6 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms.middleware.language.LanguageCookieMiddleware'
 )
-
 INSTALLED_APPS = (
     'djangocms_admin_style',
     'django.contrib.auth',
@@ -136,14 +110,14 @@ INSTALLED_APPS = (
     'djangocms_googlemap',
     'djangocms_video',
     'golf_site2',
-    'events'
+    'events',
+    'storages',
+    'zappa_django_utils',
 )
-
 LANGUAGES = (
     ## Customize this
     ('en', gettext('en')),
 )
-
 CMS_LANGUAGES = {
     ## Customize this
     1: [
@@ -174,17 +148,41 @@ CMS_PERMISSION = True
 
 CMS_PLACEHOLDER_CONF = {}
 
-DATABASES = {
-    'default': {
-        'CONN_MAX_AGE': 0,
-        'ENGINE': 'django.db.backends.sqlite3',
-        'HOST': 'localhost',
-        'NAME': 'project.db',
-        'PASSWORD': '',
-        'PORT': '',
-        'USER': ''
+
+if config.get('local', 'host_name') in socket.gethostname():
+    DATABASES = {
+        'default': {
+            'ENGINE': 'zappa_django_utils.db.backends.s3sqlite',
+            'NAME': 'golf_site2.db',
+            'BUCKET': config.get('lambda', 'db_bucket_name')
+        }
     }
-}
+else:
+    ############# DATABASE DEFINITIONS ################
+    SCHEMA = config.get('golf_site2', 'db_schema')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'OPTIONS': {
+                'options': f'-c search_path={SCHEMA}'
+            },
+            'NAME': config.get('lambda', 'db_name'),
+            'USER': config.get('lambda', 'db_user'),
+            'PASSWORD': config.get('lambda', 'db_password'),
+            'HOST': config.get('lambda', 'db_host'),
+            'PORT': '5432',
+        }
+    }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'golf_site2.db',
+#     }
+# }
+
 
 MIGRATION_MODULES = {
     

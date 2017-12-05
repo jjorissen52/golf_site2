@@ -102,3 +102,5 @@ ENV/
 .idea/
 /zappa_settings.json
 /project.db
+secrets*
+/golf_site2.db
