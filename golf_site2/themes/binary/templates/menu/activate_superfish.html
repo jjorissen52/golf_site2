@@ -1,0 +1,49 @@
+{% load static %}
+{% block superfish_activate %}
+<script src="{% static "js/superfish/jquery.js" %}"></script>
+<script src="{% static "js/superfish/hoverIntent.js" %}"></script>
+<script src="{% static "js/superfish/superfish.js" %}"></script>
+<script>
+(function($){ //create closure so we can safely use $ as alias for jQuery
+
+    $(document).ready(function(){
+
+        // initialise plugin
+        var example = $('#example').superfish({
+            //add options here if required
+        });
+    });
+
+})(jQuery);
+</script>
+
+<link rel="stylesheet" href="{% static "css/superfish/superfish.css" %}" media="screen">
+<style>
+li.current{
+    background-color: #384452;
+}
+.sf-menu a {
+    color:white;
+    border: None;
+}
+.sf-menu.ul {
+    background-color: #384452;
+}
+.sf-menu li:hover,
+.sf-menu ul:hover,
+.sf-menu li.sfHover,
+.sf-menu ul.sfHover,
+.sf-menu a:focus,
+.sf-menu a:hover,
+.sf-menu a:active,
+.sf-menu li.sfHover > a,
+.sf-menu > li:hover > a,
+.sf-menu > li.sfHover > a
+    {
+        background-color:#566372;
+        color: white;
+        outline: none;
+    }
+
+</style>
+{% endblock superfish_activate %}

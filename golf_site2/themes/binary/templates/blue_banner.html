@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load cms_tags sekizai_tags menu_tags static %}
+{% block banner %}
+<link rel="stylesheet" href="{% static "assets/css/table.css" %}" />
+<link rel="stylesheet" href="{% static "assets/css/button.css" %}" />
+<script src="{% static "assets/js/jquery.min.js" %}"></script>
+<script src="{% static "bootstrap/dist/js/bootstrap.js" %}"></script>
+<script src="{% static "assets/js/jquery.scrolly.min.js" %}"></script>
+<script src="{% static "assets/js/skel.min.js" %}"></script>
+<script src="{% static "assets/js/util.js" %}"></script>
+<script src="{% static "assets/js/main.js" %}"></script>
+<section id="banner" style="margin-top: 0em; min-height: 100vh;">
+    <div class="inner">
+        {% placeholder "Main Content" %}
+{#        <img class="filer_image center img-responsive" alt="AVID: A Vision in Darkness"#}
+{#             src="{% static "images/BaseLogo.png" %}" style="max-height: 400px; margin-top: -30px; margin: auto;" class="img img-fluid">#}
+{#        <h5 style="text-align: center;"><em>Our mission is to teach children who</em><br />#}
+{#        <em>have visual impairments the healing power of golf.</em></h5>#}
+{#        <ul class="actions">#}
+{#            <li><a href="#main" class="button alt scrolly big">Continue</a></li>#}
+{#        </ul>#}
+{#        <h4>[Site Under Construction]</h4>#}
+    </div>
+</section>
+{% endblock banner %}
+
+{% block content %}
+    <section id="main">
+        <div class="inner">
+        {% placeholder content %}
+        </div>
+    </section>
+{% endblock %}

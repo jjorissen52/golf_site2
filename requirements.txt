@@ -1,7 +1,7 @@
 ##########
 # DJANGO #
 ##########
-Django==1.11
+Django==1.10
 
 ##############
 # DJANGO CMS #
@@ -21,22 +21,22 @@ django-filer>=1.2
 cmsplugin-filer>=1.1
 django-sekizai>=0.9
 django-classy-tags>=0.7
+Pillow>=3.0
 html5lib>=0.999999,<0.99999999
 easy_thumbnails
+djangocms_cascade
 
 ####################
 # DEPLOYMENT #
 ####################
 django-storages==1.6.5
-whitenoise==3.3.1
-zappa==0.45.1
+zappa==0.45.3
 zappa-django-utils==0.3.1
 psycopg2==2.7.3.2
 
 #########
 # OTHER #
 #########
-Pillow>=3.0
 six
 pytz
 

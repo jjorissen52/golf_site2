@@ -104,3 +104,4 @@ ENV/
 /project.db
 secrets*
 /golf_site2.db
+media/
