@@ -7,8 +7,10 @@ config = configparser.ConfigParser()
 config.read(os.path.join(BASE_DIR, 'secrets.conf'))
 SECRET_KEY = config.get('django', 'secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+ALLOWED_HOSTS = [config.get('golf_site2', 'allowed_host_1'), config.get('golf_site2', 'allowed_host_2')]
+if DEBUG:
+    ALLOWED_HOSTS += ['localhost']
 ROOT_URLCONF = 'golf_site2.urls'
 WSGI_APPLICATION = 'golf_site2.wsgi.application'
 # Internationalization
