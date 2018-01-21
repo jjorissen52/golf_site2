@@ -9,8 +9,6 @@ SECRET_KEY = config.get('django', 'secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 ALLOWED_HOSTS = [config.get('golf_site2', 'allowed_host_1'), config.get('golf_site2', 'allowed_host_2')]
-if DEBUG:
-    ALLOWED_HOSTS += ['localhost']
 ROOT_URLCONF = 'golf_site2.urls'
 WSGI_APPLICATION = 'golf_site2.wsgi.application'
 # Internationalization
@@ -185,6 +183,8 @@ if config.get('local', 'host_name') in socket.gethostname():
             'NAME': 'golf_site2.db',
         }
     }
+    ALLOWED_HOSTS += ['localhost']
+    DEBUG = True
 else:
     ############# DATABASE DEFINITIONS ################
     SCHEMA = config.get('golf_site2', 'db_schema')

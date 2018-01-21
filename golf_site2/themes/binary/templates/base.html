@@ -26,7 +26,7 @@
   <body>
     {% cms_toolbar %}
 {#    <div class="container">#}
-
+      <div id="top"></div>
       <nav class="navbar navbar-inverse bs-dark" role="navigation" style="margin-bottom: 0px;">
         <div class="navbar-header fluid">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -76,19 +76,18 @@
           {% block banner %}{% endblock banner %}
           {% block content %}{% endblock %}
       {% endblock %}
-
-      <hr>
       <footer>
           {% block footer %}
               <!-- Footer -->
 			<footer id="footer">
+                <p><a href="https://avid.golf/en/contact-us">Contact Us</a></p>
 				<ul class="icons">
 					<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
 					<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+					<li><a href="https://www.youtube.com/channel/UCyjx1OB4eq-0hyc_PFfr6cA" class="icon fa-youtube"><span class="label">YouTube</span></a></li>
 				</ul>
 				<div class="copyright">
-					&copy; Untitled. Design: <a href="https://templated.co">TEMPLATED</a>. Images: <a href="https://unsplash.com">Unsplash</a>.
+					&copy; AVID Golf. Design: <a href="https://templated.co">TEMPLATED</a>.
 				</div>
 			</footer>
           {% endblock %}
