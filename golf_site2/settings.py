@@ -110,6 +110,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'golf_site2', 'themes', 'binary', 'templates'),
+            os.path.join(BASE_DIR, 'templates'),
             # os.path.join(BASE_DIR, 'golf_site2', 'themes', 'base', 'templates'),
          ],
         'OPTIONS': {
@@ -134,18 +135,20 @@ TEMPLATES = [
         },
     },
 ]
-CMS_TEMPLATES = (
-    ## Customize this
+CMS_TEMPLATES = (    ## Customize this
     ('fullwidth.html', 'Fullwidth'),
     ('blue_banner.html', 'Blue Banner'),
     ('sidebar_left.html', 'Sidebar Left'),
-    ('sidebar_right.html', 'Sidebar Right')
+    ('sidebar_right.html', 'Sidebar Right'),
+    ('generic.html', 'Generic')
 )
 
 CMS_PERMISSION = True
 CMSPLUGIN_CASCADE_PLUGINS = ['cmsplugin_cascade.bootstrap3']
 CMSPLUGIN_CASCADE_PLUGINS.append('cmsplugin_cascade.generic')
 CMSPLUGIN_CASCADE_PLUGINS.append('cmsplugin_cascade.icon')
+
+
 
 CMSPLUGIN_CASCADE = {
     'bootstrap3': {
@@ -156,12 +159,12 @@ CMSPLUGIN_CASCADE = {
             ('lg', (1200, 'desktop', _("large desktops"), 1170, 2500)),
             # ('xl', (1600, 'desktop icon-large', _("xlarge desktops"), 1570, 8000)),
         ),
-    }
+    },
 }
 CMS_PLACEHOLDER_CONF = {
     'Main Content Placeholder': {
         'plugins': ['BootstrapContainerPlugin'],
-        'text_only_plugins': ['TextLinkPlugin'],
+        'text_only_plugins': ['TextLinkPlugin', 'FilerLinkPlugin'],
         'parent_classes': {'BootstrapContainerPlugin': None},
         'glossary': {
             'breakpoints': ['xs', 'sm', 'md', 'lg'],
@@ -171,11 +174,11 @@ CMS_PLACEHOLDER_CONF = {
                 'xs': ['(max-width: 768px)'],
                 'sm': ['(min-width: 768px)', '(max-width: 992px)'],
                 'md': ['(min-width: 992px)', '(max-width: 1200px)'],
-                # 'lg': ['(min-width: 1200px)'],
             },
         },
     },
 }
+
 if config.get('local', 'host_name') in socket.gethostname():
     DATABASES = {
         'default': {
